@@ -19,13 +19,13 @@ jobs:
     - name: Checkout dashboard repo
       uses: actions/checkout@v4
       with:
-        repository: apache/rocketmq-dashboard
+        repository: liuweiGL/rocketmq-dashboard
         ref: master
 
     - name: Set up JDK 8 for x64
       uses: actions/setup-java@v4
       with:
-        java-version: '8'
+        java-version: '17'
         distribution: 'temurin'
         architecture: x64
         cache: maven
@@ -36,12 +36,15 @@ jobs:
 
     - name: Checkout this repo
       uses: actions/checkout@v4
-      
+
     - name: Commit the jar file
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
       run: |-
-        mv ../rocketmq-dashboard/**/*.jar ./rocketmq-dashboard.jar
+        ls -l ..
+        ls -l
+        mv ./rocketmq-dashboard/**/*.jar ./rocketmq-dashboard.jar
+        exit 1
         git config --local user.email "actions@github.com"
         git config --local user.name "GitHub Actions"
         git add .
