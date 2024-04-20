@@ -33,7 +33,7 @@ jobs:
         mvn -q -DskipTests clean package
     - name: Commit the jar file
       env:
-        GH_TOKEN: ${{ secrets.GH_TOKEN }
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
       run: |-
         git pull https://github.com/liuweiGL/rocketmq-dashboard-docker.git ../tmp
         mv target/rocketmq-dashboard*.jar ../tmp/rocketmq-dashboard.jar
