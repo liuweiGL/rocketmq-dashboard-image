@@ -37,7 +37,7 @@ jobs:
     - name: Set Jar File as GITHUB_OUTPUT
       id: set-jar-output
       run: |
-        jar_path=/rocketmq-dashboard.jar
+        jar_path=${{ github.workspace }}/rocketmq-dashboard.jar
         mv **/*.jar $jar_path
         echo "::set-output name=jar-path::${jar_path}"
       working-directory: ${{ github.workspace }}
