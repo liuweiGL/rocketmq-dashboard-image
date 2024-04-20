@@ -34,6 +34,12 @@ jobs:
       run: |-
         mvn -q -DskipTests clean package
 
+    - name: Set Jar File as GITHUB_OUTPUT
+      id: set-jar-output
+      run: |
+        echo "::set-output name=jar-path::$(find . -name '*.jar' -print -quit)"
+      working-directory: ${{ github.workspace }}
+
     - name: Checkout this repo
       uses: actions/checkout@v4
 
@@ -41,15 +47,13 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
       run: |-
-        ls -l ..
-        ls -l
-        mv ./rocketmq-dashboard/**/*.jar ./rocketmq-dashboard.jar
-        exit 1
+        mv ${{ steps.set-jar-output.outputs.jar-path }} ./rocketmq-dashboard.jar
         git config --local user.email "actions@github.com"
         git config --local user.name "GitHub Actions"
         git add .
         git commit -m "update rocketmq-dashboard.jar"
         git push
+        exit 0
      
 
     # Set up BuildKit Docker container builder to be able to build
