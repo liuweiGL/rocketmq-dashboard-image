@@ -6,10 +6,8 @@ on:
     - cron: '0 6 * * *'
 
 env:
-  # Use docker.io for Docker Hub if empty
-  REGISTRY: registry.cn-shanghai.aliyuncs.com/eastcoal_cn/rocketmq-doshboard
-  # github.repository as <account>/<repo>
-  IMAGE_NAME: rocketmq-doshboard
+  REGISTRY: registry.cn-shanghai.aliyuncs.com
+  IMAGE_NAME: eastcoal_cn/rocketmq-doshboard
 
 jobs:
   build:
@@ -75,4 +73,4 @@ jobs:
       uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09
       with:
         push: true
-        tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+        tags: ${{ env.IMAGE_NAME }}:latest
