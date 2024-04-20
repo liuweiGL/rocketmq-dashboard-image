@@ -16,8 +16,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+    - name: Checkout dashboard repo
+      uses: actions/checkout@v4
+      with:
+        repository: apache/rocketmq-dashboard
+        ref: master
+    - name: Set up JDK 8 for x64
+      uses: actions/setup-java@v4
+      with:
+        java-version: '8'
+        distribution: 'temurin'
+        architecture: x64
+        cache: maven
+    - name: Run the Maven package
+      run: mvn mvn -q -DskipTests clean package
+
+    - name: Checkout self repo
+      uses: actions/checkout@v4
+
+    - name: Copy the jar file
+      run: cp ../rocketmq-dashboard/target/rocketmq-dashboard*.jar .
 
     # Set up BuildKit Docker container builder to be able to build
     # multi-platform images and export cache
