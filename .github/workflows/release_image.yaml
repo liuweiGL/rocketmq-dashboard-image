@@ -34,22 +34,14 @@ jobs:
       run: |-
         mvn -q -DskipTests clean package
 
-    - name: Set Jar File as GITHUB_OUTPUT
-      id: set-jar-output
-      run: |
-        jar_path=${{ github.workspace }}/rocketmq-dashboard.jar
-        mv **/*.jar $jar_path
-        echo "::set-output name=jar-path::${jar_path}"
-      working-directory: ${{ github.workspace }}
-
-    - name: Checkout this repo
-      uses: actions/checkout@v4
 
     - name: Commit the jar file
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
       run: |-
-        mv ${{ steps.set-jar-output.outputs.jar-path }} ./rocketmq-dashboard.jar
+        git clone https://github.com/liuweiGL/rocketmq-dashboard-docker.git rocketmq-dashboard-docker
+        mv **/rocketmq-dashboard*.jar rocketmq-dashboard-docker/rocketmq-dashboard.jar
+        cd rocketmq-dashboard-docker
         git config --local user.email "actions@github.com"
         git config --local user.name "GitHub Actions"
         git add .
