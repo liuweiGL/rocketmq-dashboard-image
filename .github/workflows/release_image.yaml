@@ -34,8 +34,10 @@ jobs:
       run: |-
         mvn -q -DskipTests clean package
 
-    - name: Commit the jar file
+    - name: Checkout this repo
       uses: actions/checkout@v4
+      
+    - name: Commit the jar file
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
       run: |-
