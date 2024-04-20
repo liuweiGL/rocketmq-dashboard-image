@@ -37,7 +37,9 @@ jobs:
     - name: Set Jar File as GITHUB_OUTPUT
       id: set-jar-output
       run: |
-        echo "::set-output name=jar-path::$(find . -name '*.jar' -print -quit)"
+        jar_path=$(find . -name '*.jar' -print -quit)
+        absolute_path="${{ github.workspace }}/${jar_path}"
+        echo "::set-output name=jar-path::${absolute_path}"
       working-directory: ${{ github.workspace }}
 
     - name: Checkout this repo
