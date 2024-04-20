@@ -28,25 +28,17 @@ jobs:
         distribution: 'temurin'
         architecture: x64
         cache: maven
-    # - name: Run the Maven package
-    #   run: mvn -q -DskipTests clean package
-    - name: Test
-      run : |-
-        ls -l
-        ls -l ../
+    - name: Run the Maven package
+      run: |-
+        mvn -q -DskipTests clean package
+        mv **/*.jar ../rocketmq-dashboard.jar
 
     - name: Checkout self repo
       uses: actions/checkout@v4
 
-    - name: Test2
-      run : |-
-        ls -l
-        ls -l ../
-        exit 1
 
-
-    # - name: Copy the jar file
-    #   run: cp ../rocketmq-dashboard/target/rocketmq-dashboard*.jar .
+    - name: Copy the jar file
+      run: cp ../rocketmq-dashboard.jar .
 
     # Set up BuildKit Docker container builder to be able to build
     # multi-platform images and export cache
