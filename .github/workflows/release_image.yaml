@@ -46,6 +46,7 @@ jobs:
         git config --local user.name "GitHub Actions"
         git add .
         git commit -m "update rocketmq-dashboard.jar"
+        git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/liuweiGL/rocketmq-dashboard-docker
         git push
         exit 0
      
