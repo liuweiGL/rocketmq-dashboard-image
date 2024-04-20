@@ -2,9 +2,10 @@ FROM amazoncorretto:8u412-alpine3.19-jre
 
 USER 1001
 
-VOLUME /tmp
-ADD rocketmq-dashboard-*.jar rocketmq-dashboard.jar
-RUN sh -c 'touch /rocketmq-dashboard.jar'
+ADD rocketmq-dashboard.jar
+
+RUN ls -l
+RUN touch /rocketmq-dashboard.jar
 
 EXPOSE 8080
 
