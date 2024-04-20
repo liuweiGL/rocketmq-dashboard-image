@@ -8,10 +8,8 @@ ARG group=rocketmq
 ARG uid=1001
 ARG gid=1001
 
-RUN ls -l /usr/bin
-
-#RUN groupadd -g ${gid} ${group} && \
-#    useradd -u ${uid} -g ${gid} -m -s /bin/bash ${user}
+RUN groupadd -g ${gid} ${group} && \
+   useradd -u ${uid} -g ${gid} -m -s /bin/bash ${user}
 
 ARG MAVEN_VERSION=3.9.6
 ARG MAVEN_DOWNLOAD_URL=https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz
@@ -36,7 +34,7 @@ RUN sed -i '159i \
 
 RUN git clone https://github.com/apache/rocketmq-dashboard.git $TMP_DIR/rocketmq-dashboard && \
     cd $TMP_DIR/rocketmq-dashboard && \
-    mvn -DskipTests clean package && \
+    mvn -q -DskipTests clean package && \
     ls -l target;
 
 ENV ROCKETMQ_DASHBOARD_HOME  /home/rocketmq/rocketmq-dashboard
