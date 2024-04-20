@@ -40,6 +40,7 @@ jobs:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
       run: |-
         git clone https://github.com/liuweiGL/rocketmq-dashboard-docker.git rocketmq-dashboard-docker
+        ls -la
         mv --force **/rocketmq-dashboard*.jar rocketmq-dashboard-docker/rocketmq-dashboard.jar
         cd rocketmq-dashboard-docker
         git config --local user.email "actions@github.com"
