@@ -24,6 +24,10 @@ jobs:
     - name: Checkout current repo
       run: |
         git clone https://github.com/liuweiGL/rocketmq-dashboard-docker.git rocketmq-dashboard-docker
+        cd rocketmq-dashboard-docker
+        git config --local user.email "actions@github.com"
+        git config --local user.name "GitHub Actions"
+        cd ..
 
     - name: Check should build
       id: check_build
@@ -38,8 +42,10 @@ jobs:
             should_release=false
         else
             echo $latest_hash > rocketmq-dashboard-docker/hash
-            git -C rocketmq-dashboard-docker add .
-            git -C rocketmq-dashboard-docker commit -m "update hash"
+            cd rocketmq-dashboard-docker
+            git add .
+            git commit -m "update hash"
+            cd ..
         fi
         echo "should_release=$should_release" >> $GITHUB_OUTPUT
 
@@ -64,12 +70,11 @@ jobs:
         rm rocketmq-dashboard-docker/rocketmq-dashboard.jar
         mv **/rocketmq-dashboard*.jar rocketmq-dashboard-docker/rocketmq-dashboard.jar
         cd rocketmq-dashboard-docker
-        git config --local user.email "actions@github.com"
-        git config --local user.name "GitHub Actions"
         git add .
         git commit -m "update rocketmq-dashboard.jar"
         git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/liuweiGL/rocketmq-dashboard-docker
         git push
+        cd ..
   
   release:
     runs-on: ubuntu-latest
