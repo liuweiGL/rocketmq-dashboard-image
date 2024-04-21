@@ -10,6 +10,9 @@ env:
   REGISTRY: registry.cn-shanghai.aliyuncs.com
   IMAGE_NAME: eastcoal_cn/rocketmq-doshboard
 
+permissions:
+  actions: write
+  
 jobs:
   build:
     runs-on: ubuntu-latest
