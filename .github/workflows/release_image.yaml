@@ -6,6 +6,7 @@ on:
     - cron: '0 6 * * *'
 
 env:
+  GH_TOKEN: ${{ secrets.GH_TOKEN }}
   REGISTRY: registry.cn-shanghai.aliyuncs.com
   IMAGE_NAME: eastcoal_cn/rocketmq-doshboard
 
@@ -66,8 +67,6 @@ jobs:
         mvn -q -DskipTests clean package
 
     - name: Commit the jar file
-      env:
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}
       run: |
         
         rm rocketmq-dashboard-docker/rocketmq-dashboard.jar
