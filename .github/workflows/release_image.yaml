@@ -12,7 +12,8 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    outputs:
+      should_release: ${{ steps.check_build.outputs.should_release }}
     steps:
     - name: Checkout dashboard repo
       uses: actions/checkout@v4
@@ -20,8 +21,30 @@ jobs:
         repository: apache/rocketmq-dashboard
         ref: master
 
+    - name: Checkout docker repo
+      run: |
+        git clone https://github.com/liuweiGL/rocketmq-dashboard-docker.git rocketmq-dashboard-docker
+
+    - name: Check should build
+      id: check_build
+      run: |
+        should_release=true
+        if [ -f rocketmq-dashboard-docker/hash ]; then
+            pre_hash=$(cat rocketmq-dashboard-docker/hash)
+            latest_hash=$(git rev-parse HEAD)
+            if [ "$pre_hash" == "$latest_hash" ]; then
+                should_release=false
+            else
+                echo $latest_hash > rocketmq-dashboard-docker/hash
+                git -C rocketmq-dashboard-docker add .
+                git -C rocketmq-dashboard-docker commit -m "update hash"
+            fi
+        fi
+        echo "should_release=$should_release" >> $GITHUB_OUTPUT
+
     - name: Set up JDK 8 for x64
       uses: actions/setup-java@v4
+      if: ${{ steps.check_build.outputs.should_release == 'true' }}
       with:
         java-version: '8'
         distribution: 'temurin'
@@ -29,15 +52,14 @@ jobs:
         cache: maven
 
     - name: Run the Maven package
-      run: |-
+      run: |
         mvn -q -DskipTests clean package
-
 
     - name: Commit the jar file
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
-      run: |-
-        git clone https://github.com/liuweiGL/rocketmq-dashboard-docker.git rocketmq-dashboard-docker
+      run: |
+        
         rm rocketmq-dashboard-docker/rocketmq-dashboard.jar
         mv **/rocketmq-dashboard*.jar rocketmq-dashboard-docker/rocketmq-dashboard.jar
         cd rocketmq-dashboard-docker
@@ -47,22 +69,26 @@ jobs:
         git commit -m "update rocketmq-dashboard.jar"
         git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/liuweiGL/rocketmq-dashboard-docker
         git push
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+    if: ${{ needs.build.outputs.should_release == 'true' }}
+    steps:
+      - name: Checkout current repo
+        uses: actions/checkout@v4
 
-    - name: Checkout current repo
-      uses: actions/checkout@v4
+      # Login against a Docker registry except on PR
+      # https://github.com/docker/login-action
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-    # Login against a Docker registry except on PR
-    # https://github.com/docker/login-action
-    - name: Login to DockerHub
-      uses: docker/login-action@v3
-      with:
-        registry: ${{ env.REGISTRY }}
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-
-    # Build and push Docker image with Buildx (don't push on PR)
-    # https://github.com/docker/build-push-action
-    - name: Build and push Docker image
+      # Build and push Docker image with Buildx (don't push on PR)
+      # https://github.com/docker/build-push-action
+      - name: Build and push Docker image
       id: build-and-push
       uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09
       with:
