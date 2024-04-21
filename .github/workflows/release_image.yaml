@@ -13,7 +13,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      should_release: ${{ steps.check_build.outputs.should_release }}
+      updated: ${{ steps.check_updated.outputs.updated }}
     steps:
     - name: Checkout dashboard repo
       uses: actions/checkout@v4
@@ -29,17 +29,17 @@ jobs:
         git config --local user.name "GitHub Actions"
         cd ..
 
-    - name: Check should build
-      id: check_build
+    - name: Check dashboard updated
+      id: check_updated
       run: |
-        should_release=true
+        updated=true
         current_hash=""
         latest_hash=$(git rev-parse HEAD)
         if [ -f rocketmq-dashboard-docker/hash ]; then
             current_hash=$(cat rocketmq-dashboard-docker/hash)
         fi
         if [ "$current_hash" == "$latest_hash" ]; then
-            should_release=false
+            updated=false
         else
             echo $latest_hash > rocketmq-dashboard-docker/hash
             cd rocketmq-dashboard-docker
@@ -47,11 +47,14 @@ jobs:
             git commit -m "update hash"
             cd ..
         fi
-        echo "should_release=$should_release" >> $GITHUB_OUTPUT
+        echo "updated=$updated" >> $GITHUB_OUTPUT
+
+    - name: Skip if not release
+      if: steps.check_updated.outputs.updated == 'false'
+      run: exit 78
 
     - name: Set up JDK 8 for x64
       uses: actions/setup-java@v4
-      if: ${{ steps.check_build.outputs.should_release == 'true' }}
       with:
         java-version: '8'
         distribution: 'temurin'
@@ -79,7 +82,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     needs: build
-    if: ${{ needs.build.outputs.should_release == 'true' }}
+    if: ${{ needs.build.outputs.updated == 'true' }}
     steps:
     - name: Checkout current repo
       uses: actions/checkout@v4
