@@ -29,16 +29,17 @@ jobs:
       id: check_build
       run: |
         should_release=true
+        current_hash=""
+        latest_hash=$(git rev-parse HEAD)
         if [ -f rocketmq-dashboard-docker/hash ]; then
-            pre_hash=$(cat rocketmq-dashboard-docker/hash)
-            latest_hash=$(git rev-parse HEAD)
-            if [ "$pre_hash" == "$latest_hash" ]; then
-                should_release=false
-            else
-                echo $latest_hash > rocketmq-dashboard-docker/hash
-                git -C rocketmq-dashboard-docker add .
-                git -C rocketmq-dashboard-docker commit -m "update hash"
-            fi
+            current_hash=$(cat rocketmq-dashboard-docker/hash)
+        fi
+        if [ "$current_hash" == "$latest_hash" ]; then
+            should_release=false
+        else
+            echo $latest_hash > rocketmq-dashboard-docker/hash
+            git -C rocketmq-dashboard-docker add .
+            git -C rocketmq-dashboard-docker commit -m "update hash"
         fi
         echo "should_release=$should_release" >> $GITHUB_OUTPUT
 
