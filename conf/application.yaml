@@ -5,9 +5,9 @@ rocketmq:
     # configure multiple namesrv addresses to manage multiple different clusters
     namesrvAddrs: ${NAMESRV_ADDRS}
     # if you use rocketmq version < 3.5.8, rocketmq.config.isVIPChannel should be false.default true
-    isVIPChannel: ${ISVIPCHANNEL:true}
+    isVIPChannel: ${IS_VIP_CHANNEL:true}
     # timeout for mqadminExt, default 5000ms
-    timeoutMillis: ${TIMEOUTMILLIS:5000}
+    timeoutMillis: ${TIMEOUT_MILLIS:5000}
     # rocketmq-console's data path:dashboard/monitor
     dataPath: ${DATA_PATH:${rocketmq.workdir}/data}
     # set it false if you don't want use dashboard.default true
