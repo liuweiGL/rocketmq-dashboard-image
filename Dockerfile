@@ -1,4 +1,4 @@
-FROM amazoncorretto:17.0.11-al2023-headless
+FROM openjdk:17-jdk
 
 ADD rocketmq-dashboard.jar rocketmq-dashboard.jar
 
