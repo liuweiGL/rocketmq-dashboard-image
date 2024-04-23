@@ -1,4 +1,4 @@
-FROM amazoncorretto:8u412-alpine3.19-jre
+FROM amazoncorretto:17.0.11-al2023-headless
 
 ADD rocketmq-dashboard.jar rocketmq-dashboard.jar
 
