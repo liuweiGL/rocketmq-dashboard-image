@@ -1,0 +1,23 @@
+rocketmq:
+  workdir: ${WORK_DIR}
+  config:
+    # if this value is empty,use env value rocketmq.config.namesrvAddr  NAMESRV_ADDR | now, default localhost:9876
+    # configure multiple namesrv addresses to manage multiple different clusters
+    namesrvAddrs: ${NAMESRV_ADDRS}
+    # if you use rocketmq version < 3.5.8, rocketmq.config.isVIPChannel should be false.default true
+    isVIPChannel: ${ISVIPCHANNEL:true}
+    # timeout for mqadminExt, default 5000ms
+    timeoutMillis: ${TIMEOUTMILLIS:5000}
+    # rocketmq-console's data path:dashboard/monitor
+    dataPath: ${DATA_PATH:${rocketmq.workdir}/data}
+    # set it false if you don't want use dashboard.default true
+    enableDashBoardCollect: true
+    # set the message track trace topic if you don't want use the default one
+    msgTrackTopicName: ${MSG_TRACK_TOPIC_NAME}
+    ticketKey: ticket
+    # must create userInfo file: ${rocketmq.config.dataPath}/users.properties if the login is required
+    loginRequired: ${LOGIN_REQUIRED:false}
+    useTLS: false
+    # set the accessKey and secretKey if you used acl
+    accessKey: ${ACCESS_KEY} # if version > 4.4.0
+    secretKey: ${SECRET_KEY} # if version > 4.4.0

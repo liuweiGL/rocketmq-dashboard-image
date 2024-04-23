@@ -1,13 +1,13 @@
 FROM openjdk:17-jdk
 LABEL maintainer="liuweiGL <wei2460@qq.com>"
 
-ADD rocketmq-dashboard.jar rocketmq-dashboard.jar
+ENV WORK_DIR=/opt/rocketmq-dashboard
 
-USER 1001
+WORKDIR $WORK_DIR
 
-EXPOSE 8080
+COPY conf conf
+COPY rocketmq-dashboard.jar rocketmq-dashboard.jar
 
-ENV USER_HOME=/
 ENV JAVA_OPTS=""
 
-ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Duser.home=$USER_HOME -jar /rocketmq-dashboard.jar" ]
+ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS}  -jar rocketmq-dashboard.jar --spring.config.location=${WORK_DIR}/conf/application.yaml" ]
