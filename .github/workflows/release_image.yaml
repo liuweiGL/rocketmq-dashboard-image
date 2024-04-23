@@ -8,7 +8,7 @@ on:
 env:
   GH_TOKEN: ${{ secrets.GH_TOKEN }}
   REGISTRY: registry.cn-shanghai.aliyuncs.com
-  IMAGE_NAME: eastcoal_cn/rocketmq-doshboard
+  IMAGE_NAME: eastcoal_cn/rocketmq-dashboard
 
 permissions:
   actions: write
