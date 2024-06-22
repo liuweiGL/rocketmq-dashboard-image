@@ -51,11 +51,12 @@ jobs:
         if [ "$current_sha" == "$latest_sha" ]; then
             latest_sha=""
         else
-            echo $latest_sha > rocketmq-dashboard-docker/hash
+            echo "$latest_sha" > rocketmq-dashboard-docker/hash
             dashboard_commit_msg=$(git log -1 --pretty=format:%B)
             cd rocketmq-dashboard-docker
             git add .
             git commit -m "build from: $dashboard_commit_msg"
+            git push
             cd ..
         fi
         echo "result=$latest_sha" >> $GITHUB_OUTPUT
