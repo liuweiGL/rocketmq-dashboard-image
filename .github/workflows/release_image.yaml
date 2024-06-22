@@ -3,6 +3,10 @@ name: Release Image
 on:
   workflow_dispatch:
     inputs:
+      commit_hash: 
+        description: 'RocketMQ Dashboard repo commit hash'
+        required: false
+        type: string
       force_release:
         description: 'Force release even if not updated'
         required: false
@@ -28,7 +32,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: apache/rocketmq-dashboard
-        ref: master
+        ref: ${{ inputs.commit_hash || 'master' }}
 
     - name: Checkout current repo
       run: |
