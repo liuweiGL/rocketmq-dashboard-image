@@ -43,9 +43,8 @@ jobs:
     - name: Check dashboard updated
       id: check_updated
       run: |
-        ref="${{ inputs.commit_sha || 'HEAD' }}"
         current_sha=""
-        latest_sha=$(git rev-parse "$ref")
+        latest_sha=$(git rev-parse HEAD)
         if [ -f rocketmq-dashboard-docker/hash ]; then
             current_sha=$(cat rocketmq-dashboard-docker/hash)
         fi
@@ -56,7 +55,7 @@ jobs:
             dashboard_commit_msg=$(git log -1 --pretty=format:%B)
             cd rocketmq-dashboard-docker
             git add .
-            git commit -m "update hash by: $dashboard_commit_msg"
+            git commit -m "build from: $dashboard_commit_msg"
             cd ..
         fi
         echo "result=$latest_sha" >> $GITHUB_OUTPUT
