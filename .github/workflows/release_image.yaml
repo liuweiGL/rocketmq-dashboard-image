@@ -44,7 +44,7 @@ jobs:
       id: check_updated
       run: |
         current_hash=""
-        latest_hash=$(git rev-parse --short HEAD)
+        latest_hash=$(git rev-parse HEAD)
         if [ -f rocketmq-dashboard-docker/hash ]; then
             current_hash=$(cat rocketmq-dashboard-docker/hash)
         fi
