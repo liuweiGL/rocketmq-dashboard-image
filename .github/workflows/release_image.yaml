@@ -43,22 +43,23 @@ jobs:
     - name: Check dashboard updated
       id: check_updated
       run: |
-        current_hash=""
-        latest_hash=$(git rev-parse HEAD)
+        ref="${{ inputs.commit_sha || 'HEAD' }}"
+        current_sha=""
+        latest_sha=$(git rev-parse "$ref")
         if [ -f rocketmq-dashboard-docker/hash ]; then
-            current_hash=$(cat rocketmq-dashboard-docker/hash)
+            current_sha=$(cat rocketmq-dashboard-docker/hash)
         fi
-        if [ "$current_hash" == "$latest_hash" ]; then
-            latest_hash=""
+        if [ "$current_sha" == "$latest_sha" ]; then
+            latest_sha=""
         else
-            echo $latest_hash > rocketmq-dashboard-docker/hash
+            echo $latest_sha > rocketmq-dashboard-docker/hash
             dashboard_commit_msg=$(git log -1 --pretty=format:%B)
             cd rocketmq-dashboard-docker
             git add .
             git commit -m "update hash by: $dashboard_commit_msg"
             cd ..
         fi
-        echo "result=$latest_hash" >> $GITHUB_OUTPUT
+        echo "result=$latest_sha" >> $GITHUB_OUTPUT
     
     - name: Cancel if not changed
       uses: andymckay/cancel-action@0.4
