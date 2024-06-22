@@ -41,26 +41,25 @@ jobs:
     - name: Check dashboard updated
       id: check_updated
       run: |
-        updated=true
         current_hash=""
         latest_hash=$(git rev-parse HEAD)
         if [ -f rocketmq-dashboard-docker/hash ]; then
             current_hash=$(cat rocketmq-dashboard-docker/hash)
         fi
         if [ "$current_hash" == "$latest_hash" ]; then
-            updated=false
+            latest_hash=""
         else
             echo $latest_hash > rocketmq-dashboard-docker/hash
             cd rocketmq-dashboard-docker
             git add .
-            git commit -m "update hash"
+            git commit -m "update hash for: $(git log -1 --pretty=format:%B)"
             cd ..
         fi
-        echo "result=$updated" >> $GITHUB_OUTPUT
+        echo "result=$latest_hash" >> $GITHUB_OUTPUT
     
     - name: Cancel if not changed
       uses: andymckay/cancel-action@0.4
-      if: steps.check_updated.outputs.result == 'false' && !inputs.force_release
+      if: steps.check_updated.outputs.result == '' && !inputs.force_release
 
     - name: Set up JDK 8 for x64
       uses: actions/setup-java@v4
@@ -109,4 +108,6 @@ jobs:
       uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09
       with:
         push: true
-        tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+        tags: |
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.check_updated.outputs.result }}
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
