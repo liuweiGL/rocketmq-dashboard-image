@@ -17,7 +17,7 @@ on:
 env:
   GH_TOKEN: ${{ secrets.GH_TOKEN }}
   REGISTRY: registry.cn-shanghai.aliyuncs.com
-  IMAGE_NAME: eastcoal-docker/rocketmq-dashboard
+  IMAGE_NAME: eastcoal-library/rocketmq-dashboard
 
 permissions:
   actions: write
