@@ -42,15 +42,14 @@ jobs:
         run: |
           current_sha=""
           latest_sha=${{ steps.resolve_dashboard_sha.outputs.result }}
-          if [ -f rocketmq-dashboard-docker/hash ]; then
-              current_sha=$(cat rocketmq-dashboard-docker/hash)
+          if [ -f ./hash ]; then
+              current_sha=$(cat ./hash)
           fi
           if [ "$current_sha" == "$latest_sha" ]; then
               latest_sha=""
           else
-              echo "$latest_sha" > rocketmq-dashboard-docker/hash
+              echo "$latest_sha" > ./hash
               dashboard_commit_msg=$(git log -1 --pretty=format:%B)
-              cd rocketmq-dashboard-docker
               git add .
               git commit -m "build from: $dashboard_commit_msg"
               git push
