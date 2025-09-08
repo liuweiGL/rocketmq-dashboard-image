@@ -107,9 +107,9 @@ jobs:
         latest_commit_sha="${{ steps.check_updated.outputs.result }}"
         tag=""
         if [ -n "$input_commit_sha" ]; then
-          tag="${input_commit_sha:0:7}"
+          tag="${input_commit_sha}"
         else
-          tag="${latest_commit_sha:0:7}"
+          tag="${latest_commit_sha}"
         fi
         echo "result=$tag" >> $GITHUB_OUTPUT
 
