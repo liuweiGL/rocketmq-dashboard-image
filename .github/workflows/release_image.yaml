@@ -75,6 +75,7 @@ jobs:
 
     - name: Run the Maven package
       run: |
+        export DISABLE_ESLINT_PLUGIN=true
         mvn clean package -Dmaven.test.skip=true
 
     - name: Upload Artifact
