@@ -102,18 +102,21 @@ jobs:
     - name: Resolve Image Tag
       id: resolve_image_tag
       run: |
-        commit_sha="${{ inputs.commit_sha }}"
-        tag="latest"
-        if [ -n "$commit_sha" ]; then
-          tag="${commit_sha:0:7}"
+        input_commit_sha="${{ inputs.commit_sha }}"
+        latest_commit_sha="${{ steps.check_updated.outputs.result }}"
+        tag=""
+        if [ -n "$input_commit_sha" ]; then
+          tag="${input_commit_sha:0:7}"
+        else
+          tag="${latest_commit_sha:0:7}"
         fi
         echo "result=$tag" >> $GITHUB_OUTPUT
 
     # Build and push Docker image with Buildx (don't push on PR)
     # https://github.com/docker/build-push-action
     - name: Build and push Docker image
-      uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09
+      uses: docker/build-push-action@v6
       with:
         push: true
         tags: |
-          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.resolve_image_tag.outputs.result }}
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.resolve_image_tag.outputs.result }}, ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
