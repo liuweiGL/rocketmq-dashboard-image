@@ -75,7 +75,7 @@ jobs:
 
     - name: Run the Maven package
       run: |
-        mvn -q -DskipTests clean package
+        mvn clean package -Dmaven.test.skip=true
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
